@@ -6,23 +6,35 @@
 
 bool Lista::moverParaInicio(std::string str)                                                                                                                                                                                                // versão: EAMB-1.0
 {// ⁣Begin ​
-    if (this->quantidade == 0) return false; // Lista vazia, não há elementos para mover
-    No<std::string>* atual = this->cabeca->proximo; // Começa pelo primeiro elemento real
-    while (atual != this->cauda) { // Percorre a lista até encontrar o elemento ou chegar ao final
-        if (atual->valor == str) { // Elemento encontrado
-            // Desconecta o nó atual da sua posição atual
-            atual->anterior->proximo = atual->proximo;
-            atual->proximo->anterior = atual->anterior;
-            // Insere o nó logo após a cabeça
-            atual->proximo = this->cabeca->proximo;
-            atual->anterior = this->cabeca;
-            this->cabeca->proximo->anterior = atual;
-            this->cabeca->proximo = atual;
-            return true; // Movimento realizado com sucesso
-        }
-        atual = atual->proximo; // Move para o próximo nó
+    auto atual = this->cabeca->proximo;
+
+    while (atual != this->cauda && atual->valor != str) {
+        atual = atual->proximo;
     }
-    return false; // Elemento não encontrado na lista
+
+    if (atual == this->cauda) {
+        return false;
+    }
+    
+    if (atual == this->cabeca->proximo) { 
+        return true;
+    }
+
+    auto vizinhoEsquerdaAntigo = atual->anterior;
+    auto vizinhoDireitaAntigo = atual->proximo;
+
+    vizinhoEsquerdaAntigo->proximo = vizinhoDireitaAntigo;
+    vizinhoDireitaAntigo->anterior = vizinhoEsquerdaAntigo;
+
+    auto primeiroAntigo = this->cabeca->proximo;
+
+    atual->proximo = primeiroAntigo;
+    atual->anterior = this->cabeca;
+
+    this->cabeca->proximo = atual;
+    primeiroAntigo->anterior = atual;
+
+    return true;
 }//​ End ​​
 
 

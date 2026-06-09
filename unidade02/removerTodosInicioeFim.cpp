@@ -34,3 +34,44 @@ int removidos = 0;
         }
     }
     return removidos;
+
+
+
+
+
+    //Outra forma de fazer
+
+
+    int removidos = 0;
+
+    No* atual = this->inicio; 
+    No* anterior = nullptr;
+
+    while (atual != nullptr) {
+        if (atual->valor == val) {
+            No* noParaDeletar = atual;
+            
+            atual = atual->proximo; 
+
+            if (anterior == nullptr) {
+                this->inicio = atual; 
+            } 
+            else {
+                anterior->proximo = atual;
+            }
+            delete noParaDeletar;
+            this->quantidade--;
+            removidos++;
+        }else {
+            anterior = atual;   
+            atual = atual->proximo; 
+        }
+    }
+
+    if (this->inicio == nullptr) {
+        this->fim = nullptr;
+    } else {
+        this->fim = anterior;
+    }
+
+    return removidos;
