@@ -83,66 +83,12 @@ public:
 
 	
 
-	bool inserir(const std::string& chave, const std::string& valor)                                                                                                                                                                                // EAMB 1.0
+	bool inserirOrdenado(const std::string& chave, const std::string& valor)                                                                                                                                                                                // EAMB 1.0
 	{
-		// inserir ordenado
-		auto indice = hash(chave);
-		No* atual = array[indice];
-		No* anterior = nullptr;
-
-		while (atual != nullptr && atual->chave < chave) {
-			anterior = atual;
-			atual = atual->proximo;
-		}
-		
-
-		No* novo = new No(chave, valor);
-
-    // Inserção no início da lista
-    if (anterior == nullptr)
-    {
-        novo->proximo = array[indice];
-        array[indice] = novo;
-    }
-    else
-    {
-        novo->proximo = atual;
-        anterior->proximo = novo;
-    }
-
-    this->quantidade++;
-    return true;
-		
-
+		throw new std::runtime_error("Ainda não implementado.");
 	}
 
-	bool remover(const std::string& chave)                                                                                                                                                                                                          // EAMB 1.0 
-	{
-		auto indice = hash(chave);
 
-    No* atual = array[indice];
-    No* anterior = nullptr;
-
-    while (atual != nullptr)
-    {
-        if (atual->chave == chave){
-            if (anterior == nullptr){
-                // Remove o primeiro nó da lista
-                array[indice] = atual->proximo;
-            }else{
-                anterior->proximo = atual->proximo;
-            }
-            delete atual;
-            this->quantidade--;
-
-            return true;
-        }
-        anterior = atual;
-        atual = atual->proximo;
-    }
-
-    return false;
-	}
 
 
 

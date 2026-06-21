@@ -73,22 +73,4 @@ public:
         }
         return true;
     }
-
-    static void inicializar(
-        TabelaHash& tabela,
-        const std::unordered_map<std::string, std::string>& dados) {
-        for (const auto& p : dados) {
-            const std::string& chave = p.first;
-            const std::string& valor = p.second;
-            int i = tabela.hash(chave);
-            No* n = new No(chave, valor);
-            n->proximo = tabela.array[i];
-            tabela.array[i] = n;
-            tabela.quantidade++;
-        }
-    }
-
-    static inline int hash(TabelaHash& tabela, std::string chave){
-        return tabela.hash(chave);
-    }
 };

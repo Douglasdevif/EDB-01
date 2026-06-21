@@ -1,5 +1,5 @@
 # Diretórios dos subdiretórios
-SUBDIRS = q1eq2 q3
+SUBDIRS = q1 q2e3
 
 # Timestamp para o nome do arquivo zip
 TIMESTAMP = $(shell date +%H%M%S%d%m%Y)

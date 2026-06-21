@@ -58,6 +58,39 @@ private:
         return this->valorHash(chave) % this->capacidade; 
     }
 
+    float fatorDeCarga() 
+    {
+        return static_cast<float>(quantidade) / static_cast<float>(capacidade);
+    }
+
+    void aumentar()
+    {
+        redimensionar(this->capacidade * 2 + 1);
+    }
+
+
+
+
+
+
+
+
+
+
+
+    void redimensionar(size_t novaCapacidade)                                                                                                                                                                               // EAMB 1.0
+    {
+        throw new std::runtime_error("Ainda não implementado.");
+    }
+
+
+
+
+
+
+
+
+
 public:
     TabelaHash(int capacidadeInicial = CAPACIDADE_PADRAO) : capacidade(capacidadeInicial) , quantidade(0)
     {
@@ -80,45 +113,49 @@ public:
 
     bool inserir(const std::string& chave, const std::string& valor)
     {
-        int posRemovido = -1;
-        int indice = this->hash(chave);
-        for (int i = 0; i < this->capacidade; ++i)
-        {
-            int idxAtual = (indice + i) % this->capacidade;
-            Elemento& e = this->array[idxAtual];
+        
+    int posRemovido = -1;
+		int h = hash(chave);
 
-            if (e.estado == Estado::OCUPADO)
-            {
-                if (e.chave == chave)
-                {
-                    // Atualiza valor se chave já existe
-                    e.valor = valor;
-                    return true;
-                }
-            }
-            else if (e.estado == Estado::REMOVIDO)
-            {
-                if (posRemovido == -1)
-                {
-                    posRemovido = idxAtual;
-                }
-            }
-            else // Estado::LIVRE
-            {
-                if (posRemovido != -1)
-                {
-                    idxAtual = posRemovido;
+		for(int delta = 0; delta < this->capacidade; delta++){
+			auto indice = (h + delta) % capacidade;
+			Elemento& elemento = this->array[indice];
+
+			if(elemento.estado == Estado::LIVRE){
+				int posInsercao;
+
+				if(posRemovido != -1){
+					posInsercao = posRemovido;
+				} 
+                else{
+					posInsercao = indice;
                 }
 
-                // Insere novo elemento
-                this->array[idxAtual].chave = chave;
-                this->array[idxAtual].valor = valor;
-                this->array[idxAtual].estado = Estado::OCUPADO;
-                this->quantidade++;
-                return true;
-            }
+				this->array[posInsercao].chave = chave;
+				this->array[posInsercao].valor = valor;
+				this->array[posInsercao].estado = Estado::OCUPADO;
+				this->quantidade++;
+				return true;
+
+			} else if(elemento.estado == Estado::OCUPADO && elemento.chave == chave){
+				elemento.valor = valor;
+				return true;
+			} else if(elemento.estado == Estado::REMOVIDO && posRemovido != -1){
+				posRemovido = indice;
+			}
+		}
+		if(posRemovido != -1){
+				this->array[posRemovido].chave = chave;
+				this->array[posRemovido].valor = valor;
+				this->array[posRemovido].estado = Estado::OCUPADO;
+				this->quantidade++;
+				return true;
+		} 
+        else{
+            throw std::overflow_error ("Tabela cheia.");
         }
-    }
+		
+	}
 
 
 

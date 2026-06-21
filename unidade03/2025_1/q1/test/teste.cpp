@@ -1,33 +1,33 @@
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include <unordered_map>
-#include "../../lib/doctest.h"
-#include "../header/TabelaHash.h"
-#include "../header/TabelaHashTestHelper.h"
-
-std::unordered_map<std::string, std::string> dados = 
-{
-    {"AAA", "1"},
-    {"BAA", "2"},
-    {"ABA", "3"},
-    {"AAC", "4"},
-    {"AAD", "5"},
-    {"ABC", "6"},
-    {"ACD", "7"},
-    {"ABB", "8"},
-    {"CAD", "9"},
-    {"SPFC", "10"},
-    {"FPCS", "11"},
-    {"SAB", "12"},
-};
+#include "doctest.h"
+#include "TabelaHash.h"
+#include "TabelaHashTestHelper.h"
 
 TEST_CASE("Inserir ordenado - sem atualização") 
 {
     TabelaHash tabela(5);
 
     // Inserções para garantir colisões e encadeamento
+    std::unordered_map<std::string, std::string> dados = 
+	{
+        {"AAA", "1"},
+        {"BAA", "2"},
+        {"ABA", "3"},
+        {"AAC", "4"},
+        {"AAD", "5"},
+		{"ABC", "6"},
+		{"ACD", "7"},
+		{"ABB", "8"},
+		{"CAD", "9"},
+		{"SPFC", "10"},
+		{"FPCS", "11"},
+		{"SAB", "12"},
+    };
+
     for (auto& [chave, valor] : dados)
     {
-        tabela.inserir(chave, valor);
+        tabela.inserirOrdenado(chave, valor);
     }
 
     // Verifica se todos os buckets estão em ordem crescente pela chave
@@ -52,6 +52,23 @@ TEST_CASE("Inserir ordenado - com atualização")
 {
     TabelaHash tabela(5);
 
+    // Inserções para garantir colisões e encadeamento
+    std::unordered_map<std::string, std::string> dados = 
+	{
+        {"AAA", "1"},
+        {"BAA", "2"},
+        {"ABA", "3"},
+        {"AAC", "4"},
+        {"AAD", "5"},
+		{"ABC", "6"},
+		{"ACD", "7"},
+		{"ABB", "8"},
+		{"CAD", "9"},
+		{"SPFC", "10"},
+		{"FPCS", "11"},
+		{"SAB", "12"},
+    };
+
     std::unordered_map<std::string, std::string> atualizacoes = 
 	{
 		{"ABA", "13"},
@@ -60,17 +77,16 @@ TEST_CASE("Inserir ordenado - com atualização")
 		{"ABC", "16"},
     };
 
-	// Insere pela primeira vez, gerando colisões e encadeamento
+	// Insere pela primeira vez
     for (auto& [chave, valor] : dados)
     {
-        tabela.inserir(chave, valor);
+        tabela.inserirOrdenado(chave, valor);
     }
 
 	// Atualiza os valores, pois as chaves já existem
 	for (auto& [chave, valor] : atualizacoes)
     {
-        CHECK( tabela.inserir(chave, valor) == true );
-        CHECK(tabela.tamanho() == dados.size());
+        tabela.inserirOrdenado(chave, valor);
     }
 
     // Verifica se todos os buckets estão em ordem crescente pela chave

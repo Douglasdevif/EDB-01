@@ -70,6 +70,10 @@ public:
         setQuantidade(tabela, 0);
     }
 
+    static void aumentar(TabelaHash& tabela){
+        tabela.aumentar();
+    }
+
     static bool todosPermanecem(TabelaHash& tabela, std::vector<std::tuple<int, std::string, std::string>> dados)
     {
         for(auto dado : dados)
