@@ -55,7 +55,7 @@ private:
 
     int hash(const std::string& chave) const 
     {
-        return this->valorHash(chave) % this->capacidade; 
+        return valorHash(chave) % capacidade; 
     }
 
     float fatorDeCarga() 
@@ -65,7 +65,7 @@ private:
 
     void aumentar()
     {
-        redimensionar(this->capacidade * 2 + 1);
+        redimensionar(capacidade * 2 + 1);
     }
 
 
@@ -81,20 +81,19 @@ private:
     void redimensionar(size_t novaCapacidade)                                                                                                                                                                               // EAMB 1.0
     {
         Elemento* arrayNovo = new Elemento[novaCapacidade];
-        Elemento* arrayVelho = this->array;
+        Elemento* arrayVelho = array;
 
-        auto capacidadeVelha = this->capacidade;
-        this->capacidade = novaCapacidade;
-        this->array = arrayNovo;
+        auto capacidadeVelha = capacidade;
+        capacidade = novaCapacidade;
+        array = arrayNovo;
 
         for(int i = 0; i < capacidadeVelha; i++){
             Elemento& elemento = arrayVelho[i];
-
+            
             if(elemento.estado == Estado::OCUPADO){
                 auto h = this->hash(elemento.chave);
-
                 for(int delta = 0; delta < novaCapacidade; delta++){
-                    auto indice = (h + delta)%novaCapacidade;
+                    int indice = (h + delta) % novaCapacidade;
 
                     if(arrayNovo[indice].estado == Estado::LIVRE){
                         arrayNovo[indice].chave = elemento.chave;
@@ -119,12 +118,12 @@ private:
 public:
     TabelaHash(int capacidadeInicial = CAPACIDADE_PADRAO) : capacidade(capacidadeInicial) , quantidade(0)
     {
-        this->array = new Elemento[this->capacidade];
+        array = new Elemento[capacidade];
     }
 
     ~TabelaHash()
     {
-        delete [] this->array;
+        delete [] array;
     }
 
 
@@ -142,9 +141,9 @@ public:
     int posRemovido = -1;
     int h = hash(chave);
 
-    for(int delta = 0; delta < this->capacidade; delta++){
+    for(int delta = 0; delta < capacidade; delta++){
         int indice = (h + delta) % capacidade;
-        Elemento& elemento = this->array[indice];
+        Elemento& elemento = array[indice];
 
         if(elemento.estado == Estado::LIVRE){
             int posInsercao;
@@ -154,29 +153,27 @@ public:
             } else{
                 posInsercao = indice;
             }
-
-            this->array[posInsercao].chave = chave;
-            this->array[posInsercao].valor = valor;
-            this->array[posInsercao].estado = Estado::OCUPADO;
-            this->quantidade++;
+            array[posInsercao].chave = chave;
+            array[posInsercao].valor = valor;
+            array[posInsercao].estado = Estado::OCUPADO;
+            quantidade++;
             return true;
         }
-        else if(elemento.estado == Estado::OCUPADO && elemento.chave == chave){
-
+        if(elemento.estado == Estado::OCUPADO && elemento.chave == chave){
             elemento.valor = valor;
             return true;
         }
-        else if(elemento.estado == Estado::REMOVIDO && posRemovido == -1){ 
+        if(elemento.estado == Estado::REMOVIDO && posRemovido == -1){
             posRemovido = indice;
         }
     }
     if(posRemovido != -1){
-        this->array[posRemovido].chave = chave;
-        this->array[posRemovido].valor = valor;
-        this->array[posRemovido].estado = Estado::OCUPADO;
-        this->quantidade++;
+         array[posRemovido].chave = chave;
+        array[posRemovido].valor = valor;
+        array[posRemovido].estado = Estado::OCUPADO;
+        quantidade++;
         return true;
-    } else{
+    }else{
         throw std::overflow_error ("Tabela cheia.");
     }
 		
@@ -244,9 +241,9 @@ public:
         int contador = 0;
         std::unordered_set<std::string> chaves;
 
-        for (int i = 0; i < this->capacidade; ++i)
+        for (int i = 0; i < capacidade; ++i)
         {
-            const Elemento& e = this->array[i];
+            const Elemento& e = array[i];
 
             if (e.estado == Estado::OCUPADO)
             {
@@ -261,7 +258,7 @@ public:
             }
         }
 
-        if (contador != this->quantidade)
+        if (contador != quantidade)
         {
             return ConsistenciaStatus::QUANTIDADE_INCORRETA;
         }
@@ -276,19 +273,19 @@ public:
 
     bool vazia() const
     {
-        return this->quantidade == 0;
+        return quantidade == 0;
     }
 
     bool cheia() const 
     {
-        return this->capacidade == this->quantidade;
+        return capacidade == quantidade;
     }
 
     void imprimir() const
     {
-        for (int i = 0; i < this->capacidade; ++i)
+        for (int i = 0; i < capacidade; ++i)
         {
-            const Elemento& e = this->array[i];
+            const Elemento& e = array[i];
 
             std::cout << "[" << i << "]: ";
 
